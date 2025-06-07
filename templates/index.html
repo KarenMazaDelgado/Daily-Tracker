@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block hero %}
+<header class="hero" style="background-image: url('{{ url_for('static', filename='Background.png') }}');">
+  <div class="hero-content">
+    <h1>Welcome to Your Dashboard</h1>
+          <p>Track your habits, assignments & more</p>
+          <div class="hero-buttons">
+              
+            <!-- scroll buttons -->
+            <button  class="scroll-btn" data-target="pomodoro">Go to Pomodoro ↓</button>
+            <button class="scroll-btn" data-target="habits">Go To Habits ↓</button>
+            <button class="scroll-btn" data-target="assigns">Go to Assignments ↓</button>
+            <button class="scroll-btn" data-target="todolist">Go to To-Do List ↓</button>
+
+          </div>
+  </div>
+</header>
+{% endblock %}
+npm run dev
+{% block content %}
+<!--Upcomeing Assingments table-->
+<section id="assigns">
+
+<h2>Upcoming Assignments</h2>
+<table>
+  {% if upcoming %}
+    <thead>
+      <tr>
+        <th>Done</th>
+        <th>Course</th>
+        <th>Title</th>
+        <th>Due</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in upcoming %}
+        <!-- hidden edit‐form row -->
+        <tr class="edit-row" id="edit-row-{{ a.id }}" style="display:none;">
+          <td colspan="5">
+            <form method="post" action="{{ url_for('edit_assignment_route') }}">
+              <input type="hidden" name="assignment_id" value="{{ a.id }}">
+              <label>
+                Grade Earned (%):
+                <input type="number" name="score"
+                      min="0" max="100" step="0.1"
+                      value="{{ a.score if a.score is not none else '' }}"
+                      required>
+              </label>
+              <button type="submit">Save</button>
+              <button type="button" class="cancel-edit" data-id="{{ a.id }}">Cancel</button>
+            </form>
+          </td>
+        </tr>
+
+        <!-- main assignment row -->
+        <tr>
+          <td>
+            <form method="post" action="{{ url_for('toggle_assignment_route', assignment_id=a.id) }}">
+              <input type="checkbox" onChange="this.form.submit()" {% if a.is_done %}checked{% endif %}>
+            </form>
+          </td>
+          <td>{{ a.course }}</td>
+          <td>{{ a.title }}</td>
+          <td>{{ a.due_date }}</td>
+          <td>
+            <button class="edit-btn" data-id="{{ a.id }}">✏️</button>
+            <form method="post"
+                  action="{{ url_for('delete_assignment_route', assignment_id=a.id) }}"
+                  style="display:inline;">
+              <button type="submit" onclick="return confirm('Delete?')">🗑️</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  {% endif %}
+</table>
+
+{% if not upcoming %}
+  <p>No assignments yet. Add one to get started!</p>
+{% endif %}
+
+
+</section>
+
+
+<!-- ── Add Course ── -->
+<button id="show-course-form">＋ Add Course</button>
+<div id="course-form" style="display:none; border:1px solid #ccc; padding:1em; margin:1em 0;">
+  <form method="post" action="{{ url_for('index') }}">
+    <input type="hidden" name="action" value="add_course">
+
+    <label>
+      Course Code:
+      <input name="code" required placeholder="e.g. CS101">
+    </label><br>
+
+    <label>
+      Course Title:
+      <input name="title" required placeholder="e.g. Intro to CS">
+    </label><br>
+
+    <button type="submit">Save Course</button>
+    <button type="button" id="cancel-course">Cancel</button>
+  </form>
+</div>
+
+
+
+<!-- Add Assingment-->
+
+<button id="show-assignment-form">＋ Add Assignment</button>
+
+
+<!-- Hidden form popup -->
+<div id="assign-form" style="display:none; border:1px solid #ccc; padding:1em; margin:1em 0;">
+  <form method="post" action="{{ url_for('index') }}">
+    <input type="hidden" name="action" value="add_assignment">
+
+    <label>Course:
+      <select name="course_id" required>
+        <option value="">— select —</option>
+        {% for c in courses %}
+          <option value="{{ c.id }}">{{ c.code }}: {{ c.title }}</option>
+        {% endfor %}
+      </select>
+    </label><br>
+
+    <label>Title: <input name="title" required></label><br>
+    <label>Due Date: <input name="due_date" type="date" required></label><br>
+    <label>Weight (%): <input name="weight" type="number" step="0.1" required></label><br>
+
+    <button type="submit">Save</button>
+    <button type="button" id="cancel-assignment">Cancel</button>
+  </form>
+</div>
+
+
+<!--  Pomodoro ... -->
+<section id="pomodoro">
+  <h2>Pomodoro Timer</h2>
+    
+  <label>
+    Study (min):
+    <input type="number" id="study-input" value="25" min="21">
+  </label>
+  <label>
+    Short Break (min):
+    <input type="number" id="short-break-input" value="5" min="0" max="25">
+  </label>
+  <label>
+    Long Break (min):
+    <input type="number" id="long-break-input" value="15" min="0" max="25">
+  </label>
+
+  <div id="timer-display">25:00</div>
+  <button id="start-btn">Start</button>
+  <button id="stop-btn" disabled>Stop</button>
+
+  <form id="pomodoro-form" action="{{ url_for('start_pomodoro') }}" method="post" style="display:none;">
+    <input type="hidden" name="duration" id="duration-input" value="25">
+    <input type="hidden" name="course"    id="course-input"   value="">
+  </form>
+</section>
+
+
+  <!-- To Do List -->
+<section id="todolist">
+  <h1>To‑Do List</h1>
+
+    <form method="post">
+      <input name="description" placeholder="New task…" required>
+      <button type="submit">Add</button>
+    </form>
+
+
+  <table>
+  <thead><tr><th>Done</th><th>Task</th><th></th></tr></thead>
+    <tbody>
+      {% for t in todos %}
+        <tr>
+          <td>
+            <form method="post" action="{{ url_for('toggle_todo_route', todo_id=t.id) }}">
+              <input type="checkbox" onChange="this.form.submit()" {% if t.is_done %}checked{% endif %}>
+            </form>
+          </td>
+          <td>{{ t.description }}</td>
+          <td>
+            <form method="post" action="{{ url_for('delete_todo_route', todo_id=t.id) }}">
+              <button type="submit" onclick="return confirm('Delete this task?')">🗑️</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+ 
+</section>
+
+  
+<!--Course & Grades table-->
+<table>
+  <thead><th>Course ID</th><th>Course Name</th><th>Grade</th></thead>
+  <tbody>
+    {% for c in courses %}
+      <tr>
+        <td>{{ c.code }}</td>
+        <td>{{ c.title }}</td>
+        <td>{{ c.grade }}</td>
+        <td>
+          <form method="post" action="{{ url_for('delete_course_route', course_id=c.id) }}">
+            <button type="submit" onclick="return confirm('Delete course {{ c.code }}?')">🗑️</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!--Habit Tracker-->
+  <section id="habits">
+  <h2>Track a New Habit</h2>
+  <form method="post">
+    <input type="hidden" name="action" value="add_habit">
+
+    <label>
+      Habit Name:
+      <input type="text" name="habit_name" placeholder="e.g. Sleep" required>
+    </label><br>
+
+    <label>
+      Type:
+      <select name="habit_type">
+        <option value="boolean">Yes/No (done or not)</option>
+        <option value="numeric">Numeric (enter a value)</option>
+      </select>
+    </label><br>
+
+    <button type="submit">Start Tracking</button>
+  </form>
+
+  <h2>Log a Habit</h2>
+  <form method="post">
+    <input type="hidden" name="action" value="log_habit">
+
+    <label>
+      Habit:
+      <select id="habit-select" name="habit_id" required>
+        <option value="">– select –</option>
+        {% for h in habits %}
+          <option 
+            value="{{ h.id }}" 
+            data-type="{{ h.type }}">
+            {{ h.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </label><br>
+
+    <label>
+      Date:
+      <input type="date" name="log_date" max="{{ today }}" required>
+    </label><br>
+
+    <label id="value-label" style="display:none;">
+      Value:
+      <input type="number" name="value" min="0" step="0.1" value="1">
+    </label><br>
+
+    <button type="submit">Log</button>
+  </form>
+
+
+</section>
+
+
+
+<!-- Grade Predictor-->
+<h2> What-If Grade Predictor</h2>
+<form method="post" action="{{ url_for('index') }}">
+  <input type="hidden" name="action" value="grade_hypo">
+
+  <label>
+    Course:
+    <select name="course_id" required>
+      <option value="">– select –</option>
+      {% for c in courses %}
+        <option value="{{ c.id }}">{{ c.code }}: {{ c.title }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <label>
+    Hypothetical Assignment Weight (% of course):
+    <input type="number" name="hypo_weight" min="0" max="100" step="0.1" required>
+  </label>
+
+  <label>
+    Predicted Score on It (%):
+    <input type="number" name="hypo_score" min="0" max="100" step="0.1" required>
+  </label>
+
+  <button type="submit">See My New Final Grade</button>
+</form>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="flashes">
+        {% for msg in messages %}
+          <li>{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block hero %}
+<header class="hero" style="background-image: url('{{ url_for('static', filename='Background.png') }}');">
+  <div class="hero-content">
+    <h1>Your Data at a Glance</h1>
+    <p>Visualize trends and optimize your habits.</p>
+  </div>
+</header>
+{% endblock %}
+
+
+{% block content %}
+  <h1>Analytics Dashboard</h1>
+  <!-- e.g. embed your charts here -->
+   <h2>Pomodoro Sessions</h2>
+  <img src="{{ url_for('pomodoro_chart') }}" alt="Pomodoro Chart">
+
+  <h2>Habit Trends</h2>
+
+  <h2>Yes/No Habits (bar chart)</h2>
+  <img src="{{ url_for('habit_chart_boolean') }}?days={{ days }}"
+       alt="Boolean habit chart">
+
+  <h2>Numeric Habits (line chart)</h2>
+  <img src="{{ url_for('habit_chart_numeric') }}?days={{ days }}"
+       alt="Numeric habit chart">
+
+{% endblock %}

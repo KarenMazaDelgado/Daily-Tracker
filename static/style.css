@@ -1,0 +1,112 @@
+/* static/style.css */
+
+/* 1. Global default */
+body {
+  font-family: 'Prompt', sans-serif;
+  line-height: 1.6;      /* optional, for better readability */
+  margin: 0;             /* reset if you need */
+  padding: 0;
+}
+
+/* 2. Override for headers (if you want a different weight or style) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Prompt', sans-serif;
+  font-weight: 700;      /* pick a heavier weight, since Prompt offers 100–900 */
+}
+
+/* 3. Fallbacks and specificity */
+code, pre {
+  font-family: monospace;  /* keep code blocks distinct */
+}
+/* Hide value label for habit logging when selecting boolean/numeric habit */
+#value-label { display: none; }
+
+
+
+/*Nav Bar*/
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  background-color: #222;
+  color: white;
+}
+
+.navbar-logo img {
+  height: 40px;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar-links li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar-links li a:hover {
+  text-decoration: underline;
+}
+
+
+/* */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;    /* vertical centering */
+  align-items: center;        /* horizontal centering */
+  width: 100%;
+  height: 100vh;              /* fill screen */
+  min-height: 400px;          /* mp less than 400px */
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+}
+
+
+.hero-content {
+  /* flex container already centers children,
+     but if you need explicit centering: */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;                  /* space between h1, p, and buttons */
+}
+
+/* Hero text */
+.hero-content h1 {
+  font-size: 3rem;
+  margin: 0.5rem 0;
+}
+.hero-content p {
+  font-size: 1.25rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+/* Buttons overlaying the image */
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+}
+.scroll-btn {
+  padding: 0.75rem 1.5rem;
+  background: #ff8c00;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+}
+.scroll-btn.outline {
+  background: transparent;
+  border: 2px solid #ff8c00;
+}
+.scroll-btn:hover {
+  opacity: 0.9;
+}
