@@ -2,7 +2,7 @@ Author: Karen Maza Delgado :)
 
 # Daily Dashboard
 
-A gamified academic dashboard built with Python, Flask, and SQLite. It lets users track courses, assignments, habits, Pomodoro sessions, all persisted in a local database.
+An academic dashboard built with Python, Flask, and SQLite. It lets users track courses, assignments, habits, Pomodoro sessions, all persisted in a local database.
 
 ## Prerequisites
 
