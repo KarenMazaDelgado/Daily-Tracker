@@ -13,8 +13,8 @@ An academic dashboard built with Python, Flask, and SQLite. It lets users track 
 
 1. **Clone the repository**
 
-   git clone https://github.com/YourUser/daily-dashboard.git
-   cd daily-dashboard
+   git clone https://github.com/KarenMazaDelgado/Daily-Tracker.git
+   cd Daily-Tracker
    
 
 2. **Create and activate a virtual environment**
