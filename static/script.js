@@ -175,3 +175,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+// Invisibilty toggle for sidebar
+document.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('scroll', () => {
+    const sidebar = document.querySelector('.sidebar');
+    const homeSection = document.getElementById('home');
+
+    if (!sidebar || !homeSection) return;
+
+    const homeBottom = homeSection.getBoundingClientRect().bottom;
+
+    if (homeBottom < window.innerHeight * 0.1) {
+      sidebar.classList.add('visible');
+    } else {
+      sidebar.classList.remove('visible');
+    }
+  });
+});
+

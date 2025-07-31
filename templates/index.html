@@ -3,25 +3,29 @@
 {% block title %}Home{% endblock %}
 
 {% block hero %}
-<header class="hero" style="background-image: url('{{ url_for('static', filename='Background.png') }}');">
-  <div class="hero-content">
-    <h1>Welcome to Your Dashboard</h1>
-          <p>Track your habits, assignments & more</p>
-          <div class="hero-buttons">
-              
-            <!-- scroll buttons -->
-            <button  class="scroll-btn" data-target="pomodoro">Go to Pomodoro ↓</button>
-            <button class="scroll-btn" data-target="habits">Go To Habits ↓</button>
-            <button class="scroll-btn" data-target="assigns">Go to Assignments ↓</button>
-            <button class="scroll-btn" data-target="todolist">Go to To-Do List ↓</button>
+<section id="home" class="home-section">
+  <div class = home-container>
+      <header class="hero" style="background-image: url('{{ url_for('static', filename='Background.png') }}');">
+        <div class="hero-content">
+          <h1>Welcome to Your Dashboard</h1>
+                <p>Track your habits, assignments & more!</p>
+                <div class="hero-buttons">
+                    
+                  <!-- scroll buttons -->
+                  <button  class="scroll-btn" data-target="pomodoro">Pomodoro</button>
+                  <button class="scroll-btn" data-target="habits">Habits</button>
+                  <button class="scroll-btn" data-target="assigns">Assignments</button>
+                  <button class="scroll-btn" data-target="todolist">To-Do</button>
 
-          </div>
+                </div>
+        </div>
+      </header>
   </div>
-</header>
+</section>
 {% endblock %}
-npm run dev
+
 {% block content %}
-<!--Upcomeing Assingments table-->
+<!--Upcoming Assingments table-->
 <section id="assigns">
 
 <h2>Upcoming Assignments</h2>
@@ -280,42 +284,44 @@ npm run dev
 
 
 <!-- Grade Predictor-->
-<h2> What-If Grade Predictor</h2>
-<form method="post" action="{{ url_for('index') }}">
-  <input type="hidden" name="action" value="grade_hypo">
+ <section id="predict">
+    <h2> What-If Grade Predictor</h2>
+    <form method="post" action="{{ url_for('index') }}">
+      <input type="hidden" name="action" value="grade_hypo">
 
-  <label>
-    Course:
-    <select name="course_id" required>
-      <option value="">– select –</option>
-      {% for c in courses %}
-        <option value="{{ c.id }}">{{ c.code }}: {{ c.title }}</option>
-      {% endfor %}
-    </select>
-  </label>
+      <label>
+        Course: 
+        <select name="course_id" required>
+          <option value="">– select –</option>
+          {% for c in courses %}
+            <option value="{{ c.id }}">{{ c.code }}: {{ c.title }}</option>
+          {% endfor %}
+        </select>
+      </label>
 
-  <label>
-    Hypothetical Assignment Weight (% of course):
-    <input type="number" name="hypo_weight" min="0" max="100" step="0.1" required>
-  </label>
+      <label>
+        Hypothetical Assignment Weight (% of course):
+        <input type="number" name="hypo_weight" min="0" max="100" step="0.1" required>
+      </label>
 
-  <label>
-    Predicted Score on It (%):
-    <input type="number" name="hypo_score" min="0" max="100" step="0.1" required>
-  </label>
+      <label>
+        Predicted Score on It (%):
+        <input type="number" name="hypo_score" min="0" max="100" step="0.1" required>
+      </label>
 
-  <button type="submit">See My New Final Grade</button>
-</form>
+      <button type="submit">See My New Final Grade</button>
+    </form>
 
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul class="flashes">
-        {% for msg in messages %}
-          <li>{{ msg }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flashes">
+            {% for msg in messages %}
+              <li>{{ msg }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+  </section>
 
 
 
