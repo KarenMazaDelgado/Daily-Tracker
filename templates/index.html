@@ -2,24 +2,35 @@
 
 {% block title %}Home{% endblock %}
 
+
 {% block hero %}
 <section id="home" class="home-section">
-  <div class = home-container>
-      <header class="hero" style="background-image: url('{{ url_for('static', filename='Background.png') }}');">
-        <div class="hero-content">
-          <h1>Welcome to Your Dashboard</h1>
-                <p>Track your habits, assignments & more!</p>
-                <div class="hero-buttons">
-                    
-                  <!-- scroll buttons -->
-                  <button  class="scroll-btn" data-target="pomodoro">Pomodoro</button>
-                  <button class="scroll-btn" data-target="habits">Habits</button>
-                  <button class="scroll-btn" data-target="assigns">Assignments</button>
-                  <button class="scroll-btn" data-target="todolist">To-Do</button>
+  <div class="dashboard-panel"> 
+ 
+    <div class="panel-header">
+      <h1>Welcome to Tomatodo</h1><p>Too much to do? Track your assignments, to-dos, and focus time.</p>
+    </div>
 
-                </div>
+    <div class="dashboard-grid">
+
+        <div class="card assignments-card">
+          <div class = "card assignments-card">
+              <h2>Upcoming Assignments</h2>
+            <p class="placeholder">Latest assignments and courses will appear here.</p>
+          </div>
+          <div class="hero-buttons">
+          <button class="scroll-btn" data-target="assigns">View All Assignments</button>
+          
         </div>
-      </header>
+    </div>
+
+          <div class="card todo-card">
+        <h2>Priority To-Do's</h2>
+        <p class="placeholder">Your top tasks for the day will be here.</p>
+        <button class="scroll-btn" data-target="todolist">View To-Do List</button>
+        </div>
+
+    </div>
   </div>
 </section>
 {% endblock %}
@@ -144,33 +155,6 @@
 </div>
 
 
-<!--  Pomodoro ... -->
-<section id="pomodoro">
-  <h2>Pomodoro Timer</h2>
-    
-  <label>
-    Study (min):
-    <input type="number" id="study-input" value="25" min="21">
-  </label>
-  <label>
-    Short Break (min):
-    <input type="number" id="short-break-input" value="5" min="0" max="25">
-  </label>
-  <label>
-    Long Break (min):
-    <input type="number" id="long-break-input" value="15" min="0" max="25">
-  </label>
-
-  <div id="timer-display">25:00</div>
-  <button id="start-btn">Start</button>
-  <button id="stop-btn" disabled>Stop</button>
-
-  <form id="pomodoro-form" action="{{ url_for('start_pomodoro') }}" method="post" style="display:none;">
-    <input type="hidden" name="duration" id="duration-input" value="25">
-    <input type="hidden" name="course"    id="course-input"   value="">
-  </form>
-</section>
-
 
   <!-- To Do List -->
 <section id="todolist">
@@ -225,60 +209,65 @@
   </tbody>
 </table>
 
-<!--Habit Tracker-->
-  <section id="habits">
-  <h2>Track a New Habit</h2>
-  <form method="post">
-    <input type="hidden" name="action" value="add_habit">
+<!-- Habit Tracker -->
+<section id="habits">
+  <h2>Habit Tracker</h2> 
+  
+  <div class="habit-form-grid">
+      
+      <div class="habit-form-card">
+          <h2>Track a New Habit</h2>
+          <form method="post">
+              <input type="hidden" name="action" value="add_habit">
+              <label>
+                Habit Name:
+                <input type="text" name="habit_name" placeholder="e.g. Sleep" required>
+              </label><br>
+          
+              <label>
+                Type:
+                <select name="habit_type">
+                  <option value="boolean">Yes/No (done or not)</option>
+                  <option value="numeric">Numeric (enter a value)</option>
+                </select>
+              </label><br>
+          
+              <button type="submit">Start Tracking</button>
+          </form>
+      </div>
 
-    <label>
-      Habit Name:
-      <input type="text" name="habit_name" placeholder="e.g. Sleep" required>
-    </label><br>
-
-    <label>
-      Type:
-      <select name="habit_type">
-        <option value="boolean">Yes/No (done or not)</option>
-        <option value="numeric">Numeric (enter a value)</option>
-      </select>
-    </label><br>
-
-    <button type="submit">Start Tracking</button>
-  </form>
-
-  <h2>Log a Habit</h2>
-  <form method="post">
-    <input type="hidden" name="action" value="log_habit">
-
-    <label>
-      Habit:
-      <select id="habit-select" name="habit_id" required>
-        <option value="">– select –</option>
-        {% for h in habits %}
-          <option 
-            value="{{ h.id }}" 
-            data-type="{{ h.type }}">
-            {{ h.name }}
-          </option>
-        {% endfor %}
-      </select>
-    </label><br>
-
-    <label>
-      Date:
-      <input type="date" name="log_date" max="{{ today }}" required>
-    </label><br>
-
-    <label id="value-label" style="display:none;">
-      Value:
-      <input type="number" name="value" min="0" step="0.1" value="1">
-    </label><br>
-
-    <button type="submit">Log</button>
-  </form>
-
-
+      <div class="habit-form-card">
+          <h2>Log a Habit</h2>
+          <form method="post">
+              <input type="hidden" name="action" value="log_habit">
+              <label>
+                Habit:
+                <select id="habit-select" name="habit_id" required>
+                  <option value="">– select –</option>
+                  {% for h in habits %}
+                    <option 
+                      value="{{ h.id }}" 
+                      data-type="{{ h.type }}">
+                      {{ h.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </label><br>
+          
+              <label>
+                Date:
+                <input type="date" name="log_date" max="{{ today }}" required>
+              </label><br>
+          
+              <label id="value-label" style="display:none;">
+                Value:
+                <input type="number" name="value" min="0" step="0.1" value="1">
+              </label><br>
+          
+              <button type="submit">Log</button>
+          </form>
+      </div>
+  </div>
 </section>
 
 
@@ -322,6 +311,25 @@
         {% endif %}
       {% endwith %}
   </section>
+
+  <div id="pomodoro-modal" class="modal">
+      <div class="modal-content">
+          <span class="close-btn">&times;</span>
+          <h2>Pomodoro Timer</h2>
+          <label>Study (min): <input type="number" id="study-input" value="25" min="21"></label>
+          <label>Short Break (min): <input type="number" id="short-break-input" value="5" min="0" max="25"></label>
+          <label>Long Break (min): <input type="number" id="long-break-input" value="15" min="0" max="25"></label>
+
+          <div id="timer-display">25:00</div>
+          <button id="start-btn">Start</button>
+          <button id="stop-btn" disabled>Stop</button>
+
+          <form id="pomodoro-form" action="{{ url_for('start_pomodoro') }}" method="post" style="display:none;">
+              <input type="hidden" name="duration" id="duration-input" value="25">
+              <input type="hidden" name="course" id="course-input" value="">
+          </form>
+      </div>
+  </div>
 
 
 

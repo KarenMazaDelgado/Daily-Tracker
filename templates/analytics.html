@@ -13,8 +13,36 @@
 
 
 {% block content %}
-  <h1>Analytics Dashboard</h1>
-  <!-- e.g. embed your charts here -->
+<div class="analytics-container">
+  
+  <h2>Current Course Grades</h2>
+  <div class="grades-analytics-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Course Code</th>
+          <th>Course Name</th>
+          <th>Current Grade (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in courses %}
+          <tr>
+            <td>{{ c.code }}</td>
+            <td>{{ c.title }}</td>
+           <td>
+                {% if c.grade is not none and c.grade < 100.0 %}
+                    {{ "{:.1f}".format(c.grade) }}% 
+                {% else %}
+                    No Graded Assignments
+                {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
    <h2>Pomodoro Sessions</h2>
   <img src="{{ url_for('pomodoro_chart') }}" alt="Pomodoro Chart">
 
@@ -27,5 +55,5 @@
   <h2>Numeric Habits (line chart)</h2>
   <img src="{{ url_for('habit_chart_numeric') }}?days={{ days }}"
        alt="Numeric habit chart">
-
+</div>
 {% endblock %}

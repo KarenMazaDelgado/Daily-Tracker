@@ -1,4 +1,4 @@
-#Data Science stuff
+#Analytics 
 
 import pandas as pd
 from db import get_conn

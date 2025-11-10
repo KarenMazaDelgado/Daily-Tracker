@@ -160,7 +160,23 @@ def analytics_view():
     try:
         days = int(request.args.get("days", 30))
     except ValueError:
-        days = 30
+        days = 30 
+        
+    #Calculate and fetch grades for the analytics page
+    with get_conn() as conn:
+        courses = conn.execute("SELECT id, code, title FROM courses").fetchall()
+    
+    courses_with_grades = []
+    for c in courses:
+        # The analytics.actual_final_grade function is perfect for this
+        grade = analytics.actual_final_grade(c["id"]) 
+        courses_with_grades.append({
+            "id": c["id"],
+            "code": c["code"],
+            "title": c["title"],
+            # Store the raw float grade for now; format in HTML
+            "grade": grade 
+        })
 
     # FETCH the habit types
     all_habits = habits.get_habits()   # returns list of {"id","name"}

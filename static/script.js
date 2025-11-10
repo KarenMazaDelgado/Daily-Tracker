@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let sessionCount = 0;
   let isWork       = true;
 
+  // For Pomodoro Modal
+  
   function formatTime(s) {
     const m   = String(Math.floor(s/60)).padStart(2, "0");
     const sec = String(s % 60).padStart(2, "0");
@@ -120,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("assign-form").style.display = "none";
   });
 
-  // ── Add Course Toggle ──
+  // Add Course Toggle 
   document.getElementById("show-course-form").addEventListener("click", () => {
     document.getElementById("course-form").style.display = "block";
   });
@@ -193,3 +195,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// For Pomodoro Modal
+
+const pomodoroModal = document.getElementById('pomodoro-modal');
+const openModalBtn = document.getElementById('open-pomodoro-modal');
+const closeModalBtn = pomodoroModal ? pomodoroModal.querySelector('.close-btn') : null;
+
+
+// Open Modal Logic
+if (openModalBtn && pomodoroModal) {
+    openModalBtn.onclick = function() {
+        pomodoroModal.classList.add('is-active'); // ADD the class to show it
+    }
+}
+
+//  Close Modal Logic
+if (closeModalBtn) {
+    closeModalBtn.onclick = function() {
+        pomodoroModal.classList.remove('is-active'); // REMOVE the class to hide it
+    }
+}
+
+//  Close Modal Logic (Clicking outside)
+window.onclick = function(event) {
+    if (event.target === pomodoroModal) {
+        pomodoroModal.classList.remove('is-active');
+    }
+}
