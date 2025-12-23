@@ -56,7 +56,7 @@ An academic dashboard built with Python, Flask, and SQLite. It lets users track 
    Navigate to http://127.0.0.1:5000 to access the dashboard.
 
 ## Project Structure
-
+```text
 daily-dashboard/
 ├── venv/             # Virtual environment (do not edit)
 ├── dashboard.db      # SQLite database file (auto‑created)
@@ -76,7 +76,7 @@ daily-dashboard/
     ├── style.css
     └── script.js
 
-
+```
 ## Usage
 
 * **Add a new course**: Click "Add Course" on the homepage, fill out the course code and title.
